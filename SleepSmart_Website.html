@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SleepSmart — Wake Up Better</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2f45;
+    --indigo: #1e3a5f;
+    --blue: #2563a8;
+    --sky: #4a9ede;
+    --moonlight: #8ec5fc;
+    --pale: #e8f4fd;
+    --cream: #faf9f7;
+    --gold: #e8b86d;
+    --gold-light: #f5d48a;
+    --text: #1a1a2e;
+    --muted: #6b7a8d;
+    --white: #ffffff;
+    --border: rgba(255,255,255,0.1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+  h1,h2,h3,h4 { font-family: 'DM Serif Display', serif; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(13,27,42,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem; height: 64px;
+  }
+  .nav-logo { color: var(--gold); font-family: 'DM Serif Display', serif; font-size: 1.3rem; letter-spacing: 0.02em; }
+  .nav-logo span { color: var(--moonlight); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; background: var(--navy);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 7rem 3rem 4rem;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(37,99,168,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(232,184,109,0.08) 0%, transparent 60%);
+  }
+  .star { position: absolute; border-radius: 50%; background: white; animation: twinkle 3s ease-in-out infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.2} 50%{opacity:0.8} }
+  .hero-content { max-width: 700px; position: relative; z-index: 2; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,184,109,0.15); border: 1px solid rgba(232,184,109,0.3);
+    color: var(--gold); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+    padding: 6px 14px; border-radius: 100px; text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .hero h1 { font-size: clamp(2.8rem,5vw,4.2rem); color: white; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero h1 em { color: var(--moonlight); font-style: italic; }
+  .hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.65); line-height: 1.75; max-width: 540px; margin-bottom: 2.5rem; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold); color: var(--navy); font-weight: 600; font-size: 0.95rem;
+    padding: 14px 28px; border-radius: 8px; text-decoration: none; transition: all 0.2s;
+    border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: white; font-weight: 500; font-size: 0.95rem;
+    padding: 14px 28px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25);
+    text-decoration: none; transition: all 0.2s; cursor: pointer; margin-left: 12px;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.08); }
+  .hero-bracelet {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    width: 340px; height: 340px;
+  }
+
+  /* SLEEP RING ANIMATION */
+  @keyframes pulse-ring { 0%,100%{opacity:0.15;transform:scale(1)} 50%{opacity:0.35;transform:scale(1.08)} }
+  @keyframes bracelet-glow { 0%,100%{filter:drop-shadow(0 0 12px rgba(142,197,252,0.4))} 50%{filter:drop-shadow(0 0 24px rgba(142,197,252,0.8))} }
+  @keyframes wave-out { 0%{opacity:0.6;r:30} 100%{opacity:0;r:90} }
+  @keyframes heartbeat { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.3)} }
+
+  /* SECTION STYLES */
+  section { padding: 6rem 3rem; }
+  .section-dark { background: var(--navy); color: white; }
+  .section-mid { background: var(--navy-mid); color: white; }
+  .section-light { background: var(--pale); }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--sky); margin-bottom: 0.75rem;
+  }
+  .section-title { font-size: clamp(2rem,3.5vw,2.8rem); line-height: 1.2; margin-bottom: 1.25rem; }
+  .section-body { font-size: 1.05rem; line-height: 1.8; color: var(--muted); max-width: 680px; }
+  .section-dark .section-body, .section-mid .section-body { color: rgba(255,255,255,0.65); }
+  .section-dark .section-title, .section-mid .section-title { color: white; }
+
+  /* GRID CARDS */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 2rem; transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: rgba(142,197,252,0.3); transform: translateY(-3px); }
+  .card-light {
+    background: white; border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 16px; padding: 2rem; box-shadow: 0 2px 16px rgba(0,0,0,0.06); transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card-light:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); transform: translateY(-3px); }
+  .card-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 1.25rem;
+  }
+  .card h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; margin-bottom: 0.6rem; color: white; }
+  .card-light h3 { color: var(--text); }
+  .card p, .card-light p { font-size: 0.92rem; line-height: 1.75; color: rgba(255,255,255,0.6); }
+  .card-light p { color: var(--muted); }
+
+  /* SLEEP STAGE DIAGRAM SECTION */
+  .stages-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem; }
+  @media(max-width:768px) { .stages-grid { grid-template-columns:1fr; } }
+
+  /* COMPONENTS TABLE */
+  .comp-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+  .comp-table th { text-align: left; padding: 12px 16px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sky); border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .comp-table td { padding: 14px 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
+  .comp-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .comp-table td:first-child { font-weight: 600; color: var(--gold); }
+  .comp-table td:last-child { color: rgba(255,255,255,0.6); }
+  .price-total { text-align: right; padding: 16px; color: var(--gold); font-weight: 700; font-size: 1.1rem; }
+
+  /* TWO-COL LAYOUT */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  @media(max-width:768px) { .two-col, .hero-bracelet { display: none; } }
+
+  /* ABOUT TEAM */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .team-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; text-align: center; }
+  .avatar { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: white; }
+
+  /* FOOTER */
+  footer { background: #070e16; color: rgba(255,255,255,0.4); padding: 3rem; text-align: center; font-size: 0.85rem; }
+  footer a { color: var(--sky); text-decoration: none; }
+
+  /* BADGE */
+  .badge { display: inline-block; background: rgba(74,158,222,0.15); border: 1px solid rgba(74,158,222,0.3); color: var(--sky); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 100px; text-transform: uppercase; margin-bottom: 8px; }
+
+  /* CITATION */
+  .cite { font-size: 0.78rem; color: rgba(255,255,255,0.35); margin-top: 4px; }
+  .cite a { color: var(--sky); text-decoration: none; }
+
+  /* STAT BLOCK */
+  .stat-block { text-align: center; padding: 2rem; }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 3.2rem; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.4; }
+  .stats-row { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; margin-top: 3rem; }
+  .stats-row .stat-block { border-right: 1px solid rgba(255,255,255,0.1); }
+  .stats-row .stat-block:last-child { border-right: none; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* DIAGRAM CAPTION */
+  .diagram-caption { font-size: 0.8rem; color: var(--muted); text-align: center; margin-top: 8px; font-style: italic; }
+  .section-dark .diagram-caption { color: rgba(255,255,255,0.4); }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: rgba(232,184,109,0.08); border: 1px solid rgba(232,184,109,0.25);
+    border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+  }
+  .highlight-box p { color: rgba(255,255,255,0.8); font-size: 1rem; line-height: 1.75; }
+  .highlight-box strong { color: var(--gold); }
+
+  /* ALGORITHM BOX */
+  .algo-box {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 1.5rem; font-family: 'Courier New', monospace;
+    font-size: 0.82rem; color: rgba(255,255,255,0.75); line-height: 1.9;
+    overflow-x: auto; margin-top: 1.5rem;
+  }
+  .algo-box .kw { color: var(--sky); }
+  .algo-box .cm { color: rgba(255,255,255,0.35); font-style: italic; }
+  .algo-box .val { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Sleep<span>Smart</span></div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#design">Design</a></li>
+    <li><a href="#engineering">Engineering</a></li>
+    <li><a href="#market">Market</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home" style="padding-top:7rem">
+  <!-- Stars -->
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{
+      const hero = document.querySelector('.hero');
+      for(let i=0;i<60;i++){
+        const s=document.createElement('div');
+        s.className='star';
+        const sz=Math.random()*2.5+0.5;
+        s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;opacity:${Math.random()*0.6+0.1}`;
+        hero.appendChild(s);
+      }
+    });
+  </script>
+  <div class="hero-content">
+    <div class="hero-eyebrow">🏆 CIJE Innovation Day 2025-2026</div>
+    <h1>Wake up at the <em>right moment</em> — every morning</h1>
+    <p class="hero-sub">SleepSmart is a wrist-worn smart alarm that monitors your sleep stages in real time and wakes you during light sleep — so you feel refreshed instead of groggy.</p>
+    <a href="#research" class="btn-primary">Explore the Science</a>
+    <a href="#design" class="btn-outline">See the Design</a>
+  </div>
+  <!-- SVG Bracelet Illustration -->
+  <div class="hero-bracelet">
+    <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="animation: bracelet-glow 3s ease-in-out infinite">
+      <!-- Pulse rings -->
+      <circle cx="170" cy="170" r="140" fill="none" stroke="#2563a8" stroke-width="0.5" opacity="0.2" style="animation:pulse-ring 4s ease-in-out infinite"/>
+      <circle cx="170" cy="170" r="120" fill="none" stroke="#2563a8" stroke-width="0.8" opacity="0.15" style="animation:pulse-ring 4s ease-in-out infinite 0.5s"/>
+      <!-- Wrist band -->
+      <rect x="95" y="120" width="150" height="100" rx="28" fill="#1a2f45" stroke="#4a9ede" stroke-width="1.5"/>
+      <!-- Band sides -->
+      <rect x="85" y="148" width="25" height="44" rx="8" fill="#0d1b2a" stroke="#2563a8" stroke-width="1"/>
+      <rect x="230" y="148" width="25" height="44" rx="8" fill="#0d1b2a" stroke="#2563a8" stroke-width="1"/>
+      <!-- Screen -->
+      <rect x="110" y="132" width="120" height="76" rx="12" fill="#070e16" stroke="#4a9ede" stroke-width="1"/>
+      <!-- Screen glow -->
+      <rect x="112" y="134" width="116" height="72" rx="11" fill="url(#screenGrad)" opacity="0.9"/>
+      <!-- Time display -->
+      <text x="170" y="157" text-anchor="middle" font-family="Courier New" font-size="18" font-weight="700" fill="#8ec5fc">6:42</text>
+      <text x="170" y="170" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7" fill="rgba(255,255,255,0.5)" letter-spacing="1">WAKE WINDOW</text>
+      <!-- Sleep wave line -->
+      <polyline points="118,190 126,182 134,196 142,184 150,192 158,180 166,188 174,177 182,186 190,175 198,186 206,182 214,190 222,183" fill="none" stroke="#e8b86d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+      <!-- Pulse dot -->
+      <circle cx="170" cy="177" r="2.5" fill="#e8b86d" opacity="0.9" style="animation:pulse-ring 1.2s ease-in-out infinite"/>
+      <!-- Status dot -->
+      <circle cx="224" cy="136" r="3" fill="#4ade80"/>
+      <!-- Sensor dots on back indication -->
+      <circle cx="145" cy="220" r="3" fill="#2563a8" opacity="0.6"/>
+      <circle cx="170" cy="220" r="3" fill="#4a9ede" opacity="0.8"/>
+      <circle cx="195" cy="220" r="3" fill="#2563a8" opacity="0.6"/>
+      <!-- Labels -->
+      <text x="170" y="275" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="9" fill="rgba(255,255,255,0.4)" letter-spacing="2">PULSE · MOTION · RTC</text>
+      <defs>
+        <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0d2040"/>
+          <stop offset="100%" stop-color="#050d1a"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+</section>
+
+<!-- ABSTRACT -->
+<section style="background:var(--cream); padding: 5rem 3rem;" id="abstract">
+  <div class="container">
+    <div class="two-col reveal">
+      <div>
+        <div class="section-label">Abstract</div>
+        <h2 class="section-title" style="color:var(--navy)">The problem with alarm clocks</h2>
+        <p class="section-body">Most alarms wake you at a fixed time — regardless of what sleep stage your brain is in. If that time falls during deep or REM sleep, you experience <em>sleep inertia</em>: a state of impaired cognition, grogginess, and disorientation that can persist for 30–90 minutes.</p>
+        <p class="section-body" style="margin-top:1rem">SleepSmart solves this by letting you set a <strong>wake window</strong> (e.g. 6:00–7:00 AM). The device monitors your biometrics continuously and triggers a gentle vibration alert only when you enter a light sleep stage within that window — making every morning noticeably better.</p>
+      </div>
+      <div>
+        <div class="highlight-box" style="background:rgba(37,99,168,0.08); border-color:rgba(37,99,168,0.2);">
+          <p><strong style="color:var(--blue)">Thesis statement:</strong> A wrist-worn device using an accelerometer and pulse sensor can detect light-sleep stages and trigger a gentle wake stimulus within a user-defined time window, reducing sleep inertia compared to fixed-time alarms.</p>
+        </div>
+        <div style="margin-top:1.5rem; padding:1.5rem; background:white; border-radius:12px; border:1px solid rgba(0,0,0,0.08); box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+          <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--sky); margin-bottom:0.5rem">Components</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.88rem; color:var(--muted)">
+            <div>📡 ESP32 Microcontroller</div>
+            <div>💓 Pulse Sensor</div>
+            <div>🔄 MPU-6050 Accelerometer</div>
+            <div>📳 Vibration Motor</div>
+            <div>🕐 DS3231 RTC Module</div>
+            <div>🔋 LiPo Battery</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section class="section-dark" id="research">
+  <div class="container">
+    <div class="section-label">Background &amp; Research</div>
+    <h2 class="section-title">The science of sleep stages</h2>
+    <p class="section-body">A full night of sleep consists of 4–6 cycles, each lasting 80–110 minutes. Each cycle moves through distinct stages with measurable physiological signatures our bracelet can detect.</p>
+
+    <div class="stats-row reveal">
+      <div class="stat-block">
+        <div class="stat-num">4–6</div>
+        <div class="stat-label">sleep cycles per night, each 80–110 min</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">25%</div>
+        <div class="stat-label">of sleep time in deep (N3) sleep for adults</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">30 min</div>
+        <div class="stat-label">typical sleep inertia duration after deep-sleep wake</div>
+      </div>
+    </div>
+
+    <!-- Sleep Stage SVG -->
+    <div style="margin-top:3.5rem" class="reveal">
+      <h3 style="color:white; font-family:'DM Serif Display',serif; font-size:1.4rem; margin-bottom:1.5rem">Sleep stage hypnogram — one night</h3>
+      <svg viewBox="0 0 680 260" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#4a9ede" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <!-- Grid lines -->
+        <line x1="60" y1="40" x2="60" y2="195" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <line x1="60" y1="195" x2="650" y2="195" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+        <!-- Y axis labels -->
+        <text x="50" y="50" text-anchor="end" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.5)">Awake</text>
+        <text x="50" y="95" text-anchor="end" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.5)">REM</text>
+        <text x="50" y="138" text-anchor="end" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.5)">Light</text>
+        <text x="50" y="182" text-anchor="end" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.5)">Deep</text>
+        <!-- Grid horizontals -->
+        <line x1="60" y1="47" x2="650" y2="47" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+        <line x1="60" y1="92" x2="650" y2="92" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+        <line x1="60" y1="135" x2="650" y2="135" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+        <line x1="60" y1="180" x2="650" y2="180" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+        <!-- X axis: time labels -->
+        <text x="60" y="212" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">11 PM</text>
+        <text x="178" y="212" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">1 AM</text>
+        <text x="296" y="212" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">3 AM</text>
+        <text x="414" y="212" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">5 AM</text>
+        <text x="532" y="212" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">7 AM</text>
+        <text x="640" y="212" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">8 AM</text>
+        <!-- Hypnogram path -->
+        <polyline fill="none" stroke="#4a9ede" stroke-width="2" stroke-linejoin="round"
+          points="60,47 80,135 100,180 145,180 165,135 185,92 215,92 235,135 255,180 295,180 315,135 340,92 380,92 400,135 420,180 450,180 470,135 490,92 535,92 555,135 575,92 610,92 640,135"/>
+        <!-- Wake window highlight -->
+        <rect x="535" y="40" width="105" height="155" fill="rgba(232,184,109,0.08)" stroke="rgba(232,184,109,0.3)" stroke-width="1" stroke-dasharray="4 3" rx="4"/>
+        <text x="587" y="34" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8b86d" font-weight="600">WAKE WINDOW</text>
+        <!-- Best wake point -->
+        <circle cx="575" cy="92" r="6" fill="#e8b86d" opacity="0.9"/>
+        <circle cx="640" cy="135" r="6" fill="#4ade80" opacity="0.9"/>
+        <text x="580" y="80" font-family="DM Sans" font-size="8.5" fill="#e8b86d">Light sleep detected!</text>
+        <line x1="575" y1="82" x2="575" y2="86" stroke="#e8b86d" stroke-width="1"/>
+        <!-- Legend -->
+        <circle cx="80" cy="235" r="4" fill="#4a9ede"/>
+        <text x="90" y="238" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Sleep stages over time</text>
+        <circle cx="210" cy="235" r="4" fill="#e8b86d"/>
+        <text x="220" y="238" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Optimal wake moment</text>
+        <circle cx="340" cy="235" r="4" fill="#4ade80"/>
+        <text x="350" y="238" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">SleepSmart alert fired</text>
+      </svg>
+      <p class="diagram-caption">Stylized hypnogram illustrating a typical night. SleepSmart fires a vibration alert when light sleep is detected within the user's wake window.</p>
+    </div>
+
+    <div class="cards reveal" style="margin-top:3.5rem">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(37,99,168,0.25)">🌊</div>
+        <h3>N1 — Light Transition</h3>
+        <p>The transition from wakefulness to sleep. Muscle twitches, slow eye rolls. Heart rate and breathing begin to slow. Lasts 1–7 minutes. Easy to wake from with no grogginess.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(74,158,222,0.25)">💤</div>
+        <h3>N2 — Light Sleep</h3>
+        <p>Body temperature drops, heart rate slows. Accounts for ~45% of total sleep time. SleepSmart's <strong style="color:var(--gold)">primary target</strong>: movement is minimal, heart rate is steady and low.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(142,197,252,0.2)">🧠</div>
+        <h3>N3 — Deep Sleep (SWS)</h3>
+        <p>Slow delta brainwaves, lowest heart rate, hardest to wake. Essential for tissue repair. Waking from N3 causes severe sleep inertia — grogginess lasting up to 30+ minutes.</p>
+        <p class="cite">Source: <a href="https://en.wikipedia.org/wiki/Sleep_inertia" target="_blank">Wikipedia — Sleep Inertia</a></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(232,184,109,0.2)">👁️</div>
+        <h3>REM — Dream Sleep</h3>
+        <p>Rapid eye movements, brain activity like wakefulness, muscle paralysis. Critical for memory and emotion. Increases in proportion toward morning — which is why morning light sleep windows are ideal.</p>
+      </div>
+    </div>
+
+    <div class="highlight-box reveal" style="margin-top:3rem">
+      <p><strong>The key insight:</strong> Sleep inertia is caused by abrupt awakening during deep (N3) or REM sleep. Research shows waking during N1 or N2 light sleep eliminates most grogginess because the brain is already near wakefulness. Smart alarm studies confirm users report significantly higher morning alertness when awakened in light sleep stages.</p>
+      <p class="cite" style="margin-top:8px">Sources: <a href="https://www.sleepfoundation.org/how-sleep-works/sleep-inertia" target="_blank">Sleep Foundation</a> · <a href="https://ouraring.com/blog/why-do-i-wake-up-tired/" target="_blank">Oura Research</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6710480/" target="_blank">PMC — Sleep Inertia Review</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN -->
+<section class="section-mid" id="design">
+  <div class="container">
+    <div class="section-label">Design &amp; Engineering</div>
+    <h2 class="section-title">How SleepSmart works</h2>
+    <p class="section-body">The bracelet uses two biometric sensors to infer sleep stage, then makes a wake decision every 30 seconds based on the combined signal.</p>
+
+    <!-- System Architecture Diagram -->
+    <div style="margin-top:3rem" class="reveal">
+      <h3 style="color:rgba(255,255,255,0.8); font-size:1rem; font-weight:500; margin-bottom:1rem; letter-spacing:0.05em; text-transform:uppercase; font-family:'DM Sans',sans-serif">System Block Diagram</h3>
+      <svg viewBox="0 0 680 320" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#4a9ede" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <!-- INPUTS -->
+        <g>
+          <rect x="20" y="70" width="120" height="52" rx="8" fill="rgba(37,99,168,0.2)" stroke="#2563a8" stroke-width="1"/>
+          <text x="80" y="91" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#8ec5fc">Pulse Sensor</text>
+          <text x="80" y="107" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Heart rate (BPM)</text>
+        </g>
+        <g>
+          <rect x="20" y="148" width="120" height="52" rx="8" fill="rgba(37,99,168,0.2)" stroke="#2563a8" stroke-width="1"/>
+          <text x="80" y="169" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#8ec5fc">MPU-6050</text>
+          <text x="80" y="185" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Accel + Gyro</text>
+        </g>
+        <g>
+          <rect x="20" y="226" width="120" height="52" rx="8" fill="rgba(37,99,168,0.2)" stroke="#2563a8" stroke-width="1"/>
+          <text x="80" y="247" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#8ec5fc">DS3231 RTC</text>
+          <text x="80" y="263" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Timekeeping</text>
+        </g>
+        <!-- Arrows to ESP32 -->
+        <line x1="140" y1="96" x2="218" y2="140" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr3)"/>
+        <line x1="140" y1="174" x2="218" y2="174" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr3)"/>
+        <line x1="140" y1="252" x2="218" y2="210" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr3)"/>
+        <!-- ESP32 BRAIN -->
+        <rect x="220" y="100" width="170" height="150" rx="12" fill="rgba(13,64,120,0.5)" stroke="#4a9ede" stroke-width="1.5"/>
+        <text x="305" y="125" text-anchor="middle" font-family="DM Serif Display" font-size="14" fill="white">ESP32</text>
+        <text x="305" y="143" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Microcontroller + WiFi</text>
+        <!-- Internal steps -->
+        <rect x="234" y="152" width="142" height="24" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <text x="305" y="168" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.7)">Signal Processing</text>
+        <rect x="234" y="182" width="142" height="24" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <text x="305" y="198" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.7)">Sleep Stage Inference</text>
+        <rect x="234" y="212" width="142" height="24" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <text x="305" y="228" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.7)">Wake Decision Logic</text>
+        <!-- USER INPUT -->
+        <rect x="220" y="20" width="170" height="52" rx="8" fill="rgba(232,184,109,0.12)" stroke="rgba(232,184,109,0.4)" stroke-width="1"/>
+        <text x="305" y="41" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#e8b86d">User Input</text>
+        <text x="305" y="57" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Wake window (start / end)</text>
+        <line x1="305" y1="72" x2="305" y2="100" stroke="rgba(232,184,109,0.5)" stroke-width="1" marker-end="url(#arr3)"/>
+        <!-- Arrow to outputs -->
+        <line x1="390" y1="174" x2="450" y2="130" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr3)"/>
+        <line x1="390" y1="174" x2="450" y2="210" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr3)"/>
+        <!-- OUTPUT: Vibration -->
+        <rect x="452" y="102" width="130" height="52" rx="8" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.4)" stroke-width="1"/>
+        <text x="517" y="123" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#4ade80">Vibration Motor</text>
+        <text x="517" y="140" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Gentle wake alert</text>
+        <!-- OUTPUT: Display -->
+        <rect x="452" y="182" width="130" height="52" rx="8" fill="rgba(142,197,252,0.1)" stroke="rgba(142,197,252,0.3)" stroke-width="1"/>
+        <text x="517" y="203" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="#8ec5fc">OLED Display</text>
+        <text x="517" y="219" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Time + sleep status</text>
+        <!-- Battery -->
+        <rect x="452" y="260" width="130" height="40" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <text x="517" y="284" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.4)">LiPo Battery (3.7V 500mAh)</text>
+        <!-- Power lines -->
+        <line x1="517" y1="260" x2="305" y2="250" stroke="rgba(255,255,255,0.12)" stroke-width="0.75" stroke-dasharray="3 3"/>
+        <text x="370" y="278" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.25)">power</text>
+      </svg>
+      <p class="diagram-caption">SleepSmart system block diagram. Sensor data flows into the ESP32 for processing; the wake decision drives the vibration motor only when light sleep is detected during the user's defined window.</p>
+    </div>
+
+    <!-- Flowchart -->
+    <div style="margin-top:3.5rem" class="reveal">
+      <h3 style="color:rgba(255,255,255,0.8); font-size:1rem; font-weight:500; margin-bottom:1rem; letter-spacing:0.05em; text-transform:uppercase; font-family:'DM Sans',sans-serif">Decision Algorithm Flowchart</h3>
+      <svg viewBox="0 0 680 520" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#4a9ede" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+          <marker id="arr4n" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#e8b86d" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <!-- START -->
+        <ellipse cx="340" cy="30" rx="80" ry="22" fill="rgba(37,99,168,0.3)" stroke="#4a9ede" stroke-width="1"/>
+        <text x="340" y="35" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="white">DEVICE ON</text>
+        <!-- Arrow down -->
+        <line x1="340" y1="52" x2="340" y2="74" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr4)"/>
+        <!-- Box 1: Read sensors -->
+        <rect x="220" y="76" width="240" height="44" rx="8" fill="rgba(26,47,69,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <text x="340" y="97" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="white">Read Pulse + Accelerometer</text>
+        <text x="340" y="113" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="rgba(255,255,255,0.5)">Every 30 sec — BPM, motion magnitude</text>
+        <!-- Arrow -->
+        <line x1="340" y1="120" x2="340" y2="144" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr4)"/>
+        <!-- Decision 1: in window? -->
+        <polygon points="340,146 430,182 340,218 250,182" fill="rgba(232,184,109,0.12)" stroke="rgba(232,184,109,0.5)" stroke-width="1"/>
+        <text x="340" y="178" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#e8b86d">Current time in</text>
+        <text x="340" y="193" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#e8b86d">wake window?</text>
+        <!-- NO branch: loop back -->
+        <line x1="250" y1="182" x2="110" y2="182" stroke="#e8b86d" stroke-width="1" marker-end="url(#arr4n)"/>
+        <text x="178" y="175" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8b86d">NO</text>
+        <line x1="110" y1="182" x2="110" y2="98" stroke="#e8b86d" stroke-width="1"/>
+        <line x1="110" y1="98" x2="220" y2="98" stroke="#e8b86d" stroke-width="1" marker-end="url(#arr4n)"/>
+        <text x="100" y="145" text-anchor="end" font-family="DM Sans" font-size="8" fill="rgba(232,184,109,0.5)">Wait 30s</text>
+        <!-- YES arrow down -->
+        <line x1="340" y1="218" x2="340" y2="246" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr4)"/>
+        <text x="352" y="236" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">YES</text>
+        <!-- Box 2: Score movement -->
+        <rect x="220" y="248" width="240" height="44" rx="8" fill="rgba(26,47,69,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <text x="340" y="269" text-anchor="middle" font-family="DM Sans" font-size="11" font-weight="600" fill="white">Score Movement Activity</text>
+        <text x="340" y="285" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="rgba(255,255,255,0.5)">Low movement → light sleep indicator</text>
+        <!-- Arrow -->
+        <line x1="340" y1="292" x2="340" y2="316" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr4)"/>
+        <!-- Decision 2: light sleep? -->
+        <polygon points="340,318 440,358 340,398 240,358" fill="rgba(74,222,128,0.08)" stroke="rgba(74,222,128,0.4)" stroke-width="1"/>
+        <text x="340" y="354" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#4ade80">Low HR variability</text>
+        <text x="340" y="369" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#4ade80">&amp; low motion?</text>
+        <!-- NO branch: keep waiting -->
+        <line x1="240" y1="358" x2="130" y2="358" stroke="#e8b86d" stroke-width="1" marker-end="url(#arr4n)"/>
+        <text x="183" y="350" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8b86d">NO</text>
+        <line x1="130" y1="358" x2="130" y2="270" stroke="#e8b86d" stroke-width="1"/>
+        <line x1="130" y1="270" x2="220" y2="270" stroke="#e8b86d" stroke-width="1" marker-end="url(#arr4n)"/>
+        <!-- YES arrow down -->
+        <line x1="340" y1="398" x2="340" y2="426" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr4)"/>
+        <text x="352" y="416" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">YES</text>
+        <!-- FIRE VIBRATION -->
+        <rect x="210" y="428" width="260" height="52" rx="10" fill="rgba(74,222,128,0.15)" stroke="rgba(74,222,128,0.5)" stroke-width="1.5"/>
+        <text x="340" y="450" text-anchor="middle" font-family="DM Serif Display" font-size="14" fill="#4ade80">Fire Vibration Alert</text>
+        <text x="340" y="468" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(255,255,255,0.5)">Escalating buzz pattern until motion detected</text>
+        <!-- END -->
+        <line x1="340" y1="480" x2="340" y2="500" stroke="#4a9ede" stroke-width="1" marker-end="url(#arr4)"/>
+        <ellipse cx="340" cy="510" rx="80" ry="16" fill="rgba(37,99,168,0.3)" stroke="#4a9ede" stroke-width="1"/>
+        <text x="340" y="515" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="white">AWAKE ✓</text>
+      </svg>
+      <p class="diagram-caption">Decision algorithm flowchart. The device polls every 30 seconds, only firing the vibration motor when inside the wake window AND light sleep is detected.</p>
+    </div>
+
+    <!-- Sleep Detection Algorithm (pseudo-code) -->
+    <div style="margin-top:3rem" class="reveal">
+      <h3 style="color:rgba(255,255,255,0.75); font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:500; margin-bottom:0.75rem; letter-spacing:0.05em; text-transform:uppercase">Sleep Stage Detection — Pseudocode</h3>
+      <div class="algo-box">
+<span class="cm">// SleepSmart — Sleep Stage Detection Algorithm</span>
+<span class="cm">// Runs every SAMPLE_INTERVAL = 30 seconds</span>
+
+<span class="kw">const</span> LIGHT_SLEEP_BPM_MAX = <span class="val">65</span>;      <span class="cm">// resting HR in light sleep</span>
+<span class="kw">const</span> MOTION_THRESHOLD   = <span class="val">0.15</span>;     <span class="cm">// g-force RMS — low = still</span>
+<span class="kw">const</span> HISTORY_WINDOW     = <span class="val">5</span>;        <span class="cm">// samples to average (2.5 min)</span>
+
+<span class="kw">function</span> detectSleepStage(hrHistory, motionHistory):
+  avgHR     = mean(hrHistory)
+  motionRMS = rms(motionHistory)
+
+  <span class="kw">if</span> motionRMS &gt; <span class="val">0.5</span>:
+    <span class="kw">return</span> AWAKE
+  <span class="kw">else if</span> motionRMS &lt; MOTION_THRESHOLD <span class="kw">and</span> avgHR &lt; LIGHT_SLEEP_BPM_MAX:
+    <span class="kw">return</span> LIGHT_SLEEP      <span class="cm">// ← N1 or N2</span>
+  <span class="kw">else if</span> avgHR &lt; <span class="val">55</span> <span class="kw">and</span> motionRMS &lt; <span class="val">0.05</span>:
+    <span class="kw">return</span> DEEP_SLEEP        <span class="cm">// ← N3 (do NOT wake)</span>
+  <span class="kw">else</span>:
+    <span class="kw">return</span> UNCERTAIN
+
+<span class="kw">function</span> mainLoop():
+  <span class="kw">while</span> true:
+    hr     = readPulseSensor()
+    motion = readAccelerometer()
+    time   = rtc.getTime()
+
+    hrHistory.push(hr)
+    motionHistory.push(motion)
+
+    stage = detectSleepStage(hrHistory[-HISTORY_WINDOW:], motionHistory[-HISTORY_WINDOW:])
+    inWindow = (time &gt;= wakeWindowStart) <span class="kw">and</span> (time &lt;= wakeWindowEnd)
+
+    <span class="kw">if</span> inWindow <span class="kw">and</span> stage == LIGHT_SLEEP:
+      fireVibrationAlert()   <span class="cm">// 🎉 optimal wake moment</span>
+      <span class="kw">break</span>
+
+    sleep(<span class="val">30</span> seconds)
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIRCUIT SCHEMATIC -->
+<section style="background:#09111e; padding:6rem 3rem;" id="engineering">
+  <div class="container">
+    <div class="section-label">Circuit &amp; Components</div>
+    <h2 class="section-title" style="color:white">Circuit schematic &amp; bill of materials</h2>
+    <p class="section-body">All components communicate via I²C or analog GPIO. The ESP32's dual-core architecture handles sensor polling on Core 0 while the sleep logic runs on Core 1.</p>
+
+    <!-- Circuit SVG -->
+    <div style="margin-top:2.5rem" class="reveal">
+      <svg viewBox="0 0 680 380" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background PCB grid -->
+        <defs>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(74,158,222,0.07)" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="680" height="380" fill="url(#grid)" rx="4"/>
+        <!-- ESP32 (center) -->
+        <rect x="240" y="130" width="200" height="120" rx="6" fill="#0d1b2a" stroke="#4a9ede" stroke-width="1.5"/>
+        <rect x="248" y="138" width="184" height="104" rx="4" fill="#111f33" stroke="rgba(74,158,222,0.3)" stroke-width="0.5"/>
+        <text x="340" y="168" text-anchor="middle" font-family="DM Serif Display, serif" font-size="14" fill="#8ec5fc">ESP32</text>
+        <text x="340" y="184" text-anchor="middle" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.4)">Adafruit Feather 32u4</text>
+        <!-- Pin labels on ESP32 -->
+        <text x="252" y="210" font-family="Courier New" font-size="7.5" fill="rgba(74,158,222,0.7)">GPIO34 ← A0 (pulse)</text>
+        <text x="252" y="222" font-family="Courier New" font-size="7.5" fill="rgba(74,158,222,0.7)">I²C SDA ↔ pin 21</text>
+        <text x="252" y="234" font-family="Courier New" font-size="7.5" fill="rgba(74,158,222,0.7)">I²C SCL ↔ pin 22</text>
+        <text x="252" y="246" font-family="Courier New" font-size="7.5" fill="rgba(74,158,222,0.7)">GPIO13 → vibration</text>
+        <!-- ESP32 pins (left) -->
+        <line x1="240" y1="200" x2="220" y2="200" stroke="#4a9ede" stroke-width="1"/>
+        <line x1="240" y1="215" x2="220" y2="215" stroke="#4a9ede" stroke-width="1"/>
+        <line x1="240" y1="230" x2="220" y2="230" stroke="#4a9ede" stroke-width="1"/>
+        <!-- ESP32 pins (right) -->
+        <line x1="440" y1="215" x2="460" y2="215" stroke="#4a9ede" stroke-width="1"/>
+
+        <!-- PULSE SENSOR (top left) -->
+        <rect x="40" y="60" width="130" height="60" rx="8" fill="#0f1e30" stroke="#e8b86d" stroke-width="1"/>
+        <circle cx="90" cy="85" r="18" fill="rgba(232,184,109,0.1)" stroke="rgba(232,184,109,0.4)" stroke-width="1"/>
+        <circle cx="90" cy="85" r="8" fill="rgba(232,184,109,0.3)"/>
+        <text x="90" y="126" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#e8b86d">Pulse Sensor</text>
+        <!-- Wire: Pulse → ESP32 GPIO34 -->
+        <polyline points="170,85 210,85 210,200 220,200" fill="none" stroke="#e8b86d" stroke-width="1" stroke-dasharray="4 2"/>
+        <text x="190" y="79" font-family="Courier New" font-size="7" fill="rgba(232,184,109,0.5)">A0</text>
+
+        <!-- MPU-6050 (bottom left) -->
+        <rect x="40" y="240" width="130" height="70" rx="8" fill="#0f1e30" stroke="#4ade80" stroke-width="1"/>
+        <rect x="60" y="255" width="90" height="40" rx="4" fill="rgba(74,222,128,0.08)" stroke="rgba(74,222,128,0.3)" stroke-width="0.5"/>
+        <text x="105" y="276" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#4ade80">MPU-6050</text>
+        <text x="105" y="290" text-anchor="middle" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.4)">Accel + Gyro</text>
+        <text x="105" y="322" text-anchor="middle" font-family="DM Sans" font-size="8" fill="rgba(74,222,128,0.5)">I²C: SDA / SCL</text>
+        <!-- I2C bus -->
+        <polyline points="170,270 210,270 210,215 220,215" fill="none" stroke="#4ade80" stroke-width="1" stroke-dasharray="4 2"/>
+        <polyline points="170,285 215,285 215,230 220,230" fill="none" stroke="#4ade80" stroke-width="0.7" stroke-dasharray="3 2" opacity="0.5"/>
+
+        <!-- DS3231 RTC (top center-left) -->
+        <rect x="120" y="310" width="110" height="60" rx="8" fill="#0f1e30" stroke="#8ec5fc" stroke-width="1"/>
+        <text x="175" y="336" text-anchor="middle" font-family="DM Sans" font-size="10" font-weight="600" fill="#8ec5fc">DS3231 RTC</text>
+        <text x="175" y="351" text-anchor="middle" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.4)">Precision clock</text>
+        <text x="175" y="364" text-anchor="middle" font-family="DM Sans" font-size="8" fill="rgba(142,197,252,0.5)">I²C: SDA / SCL</text>
+        <!-- RTC to I2C -->
+        <polyline points="230,335 240,335 240,310 270,310 270,250 340,250 340,250" fill="none" stroke="#8ec5fc" stroke-width="0.8" stroke-dasharray="3 2" opacity="0.5"/>
+
+        <!-- VIBRATION MOTOR (right) -->
+        <rect x="490" y="180" width="120" height="60" rx="8" fill="#0f1e30" stroke="rgba(74,222,128,0.5)" stroke-width="1"/>
+        <circle cx="540" cy="205" r="14" fill="rgba(74,222,128,0.08)" stroke="rgba(74,222,128,0.3)" stroke-width="1"/>
+        <text x="545" y="209" text-anchor="middle" font-family="DM Sans" font-size="8" fill="rgba(74,222,128,0.8)">ERM</text>
+        <text x="540" y="232" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(74,222,128,0.8)">Vib Motor</text>
+        <!-- Transistor symbol hint -->
+        <text x="464" y="212" font-family="Courier New" font-size="7" fill="rgba(255,255,255,0.3)">NPN</text>
+        <!-- Wire to vibration -->
+        <polyline points="460,215 480,215 480,205 490,205" fill="none" stroke="rgba(74,222,128,0.6)" stroke-width="1"/>
+
+        <!-- OLED Display (top right) -->
+        <rect x="490" y="60" width="130" height="70" rx="8" fill="#0f1e30" stroke="#8ec5fc" stroke-width="1"/>
+        <rect x="504" y="70" width="102" height="48" rx="3" fill="#000e1a" stroke="rgba(142,197,252,0.3)" stroke-width="0.5"/>
+        <text x="555" y="91" text-anchor="middle" font-family="Courier New" font-size="8" fill="#8ec5fc">06:42 AM</text>
+        <text x="555" y="104" text-anchor="middle" font-family="Courier New" font-size="7" fill="rgba(74,222,128,0.8)">LIGHT SLEEP</text>
+        <text x="555" y="142" text-anchor="middle" font-family="DM Sans" font-size="9" fill="rgba(142,197,252,0.7)">SSD1306 OLED</text>
+        <!-- OLED I2C -->
+        <polyline points="490,95 470,95 470,80 440,80 440,155 440,190" fill="none" stroke="rgba(142,197,252,0.4)" stroke-width="0.8" stroke-dasharray="3 2"/>
+
+        <!-- 3V3 Power Rail -->
+        <line x1="40" y1="40" x2="640" y2="40" stroke="rgba(232,184,109,0.25)" stroke-width="1.5"/>
+        <text x="48" y="36" font-family="Courier New" font-size="8" fill="rgba(232,184,109,0.5)">3.3V</text>
+        <!-- GND Rail -->
+        <line x1="40" y1="52" x2="640" y2="52" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <text x="48" y="48" font-family="Courier New" font-size="8" fill="rgba(255,255,255,0.3)">GND</text>
+
+        <!-- Legend -->
+        <line x1="390" y1="350" x2="410" y2="350" stroke="#e8b86d" stroke-width="1" stroke-dasharray="4 2"/>
+        <text x="415" y="354" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.4)">Analog</text>
+        <line x1="460" y1="350" x2="480" y2="350" stroke="#4ade80" stroke-width="1" stroke-dasharray="4 2"/>
+        <text x="485" y="354" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.4)">I²C / Digital</text>
+        <line x1="540" y1="350" x2="560" y2="350" stroke="rgba(142,197,252,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="565" y="354" font-family="DM Sans" font-size="8" fill="rgba(255,255,255,0.4)">Display I²C</text>
+      </svg>
+      <p class="diagram-caption" style="color:rgba(255,255,255,0.35)">Simplified circuit schematic. All I²C devices share the SDA/SCL bus. The vibration motor is driven through an NPN transistor to protect the ESP32 GPIO pin.</p>
+    </div>
+
+    <!-- Bill of Materials -->
+    <div style="margin-top:3rem" class="reveal">
+      <h3 style="color:white; font-family:'DM Serif Display',serif; font-size:1.4rem; margin-bottom:0.5rem">Bill of Materials</h3>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Model</th>
+            <th>Role</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Microcontroller</td>
+            <td style="color:rgba(255,255,255,0.7)">Adafruit ESP32 Feather</td>
+            <td style="color:rgba(255,255,255,0.6)">Main processor, WiFi, BLE</td>
+            <td style="color:rgba(255,255,255,0.7)">$19.95</td>
+          </tr>
+          <tr>
+            <td>Pulse Sensor</td>
+            <td style="color:rgba(255,255,255,0.7)">PulseSensor.com v1</td>
+            <td style="color:rgba(255,255,255,0.6)">Heart rate (BPM) detection</td>
+            <td style="color:rgba(255,255,255,0.7)">$9.95</td>
+          </tr>
+          <tr>
+            <td>Accelerometer / Gyro</td>
+            <td style="color:rgba(255,255,255,0.7)">MPU-6050 IMU</td>
+            <td style="color:rgba(255,255,255,0.6)">Motion detection for sleep scoring</td>
+            <td style="color:rgba(255,255,255,0.7)">$3.50</td>
+          </tr>
+          <tr>
+            <td>Real-Time Clock</td>
+            <td style="color:rgba(255,255,255,0.7)">DS3231 RTC Module</td>
+            <td style="color:rgba(255,255,255,0.6)">Accurate timekeeping for wake window</td>
+            <td style="color:rgba(255,255,255,0.7)">$5.00</td>
+          </tr>
+          <tr>
+            <td>Vibration Motor</td>
+            <td style="color:rgba(255,255,255,0.7)">ERM 10mm vibrating disc</td>
+            <td style="color:rgba(255,255,255,0.6)">Gentle haptic wake alert</td>
+            <td style="color:rgba(255,255,255,0.7)">$2.00</td>
+          </tr>
+          <tr>
+            <td>Display</td>
+            <td style="color:rgba(255,255,255,0.7)">0.96" SSD1306 OLED</td>
+            <td style="color:rgba(255,255,255,0.6)">Time + status display</td>
+            <td style="color:rgba(255,255,255,0.7)">$4.00</td>
+          </tr>
+          <tr>
+            <td>Battery</td>
+            <td style="color:rgba(255,255,255,0.7)">3.7V 500mAh LiPo</td>
+            <td style="color:rgba(255,255,255,0.6)">Overnight power supply</td>
+            <td style="color:rgba(255,255,255,0.7)">$7.95</td>
+          </tr>
+          <tr>
+            <td>Wristband + PCB</td>
+            <td style="color:rgba(255,255,255,0.7)">3D Printed / Silicone</td>
+            <td style="color:rgba(255,255,255,0.6)">Enclosure and wearable form</td>
+            <td style="color:rgba(255,255,255,0.7)">$8.00</td>
+          </tr>
+          <tr>
+            <td>Misc (resistors, PCB, wire)</td>
+            <td style="color:rgba(255,255,255,0.7)">—</td>
+            <td style="color:rgba(255,255,255,0.6)">NPN transistor, wiring, prototyping</td>
+            <td style="color:rgba(255,255,255,0.7)">$5.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="price-total">Total: $65.35 &nbsp;·&nbsp; <span style="color:rgba(74,222,128,0.8)">Under $75 budget ✓</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET / EMPATHIZE -->
+<section class="section-light" id="market">
+  <div class="container">
+    <div class="section-label" style="color:var(--blue)">Market &amp; Empathize</div>
+    <h2 class="section-title" style="color:var(--navy)">Who needs SleepSmart?</h2>
+    <p class="section-body">Sleep deprivation and poor morning alertness affect hundreds of millions globally. Our research shows clear target populations who would benefit most.</p>
+
+    <div class="cards reveal" style="margin-top:2.5rem">
+      <div class="card-light">
+        <div class="card-icon" style="background:rgba(37,99,168,0.1); font-size:1.4rem">🎓</div>
+        <h3 style="color:var(--navy)">Students &amp; Teens</h3>
+        <p>Early school start times conflict with adolescent circadian rhythms. SleepSmart helps students wake in light sleep, arriving at school alert rather than groggy.</p>
+      </div>
+      <div class="card-light">
+        <div class="card-icon" style="background:rgba(37,99,168,0.1); font-size:1.4rem">💼</div>
+        <h3 style="color:var(--navy)">Professionals</h3>
+        <p>Workers who need to be sharp immediately upon waking — such as on-call professionals, shift workers, and those with irregular schedules — are the ideal user.</p>
+      </div>
+      <div class="card-light">
+        <div class="card-icon" style="background:rgba(37,99,168,0.1); font-size:1.4rem">💊</div>
+        <h3 style="color:var(--navy)">Sleep Issue Sufferers</h3>
+        <p>People with insomnia, hypersomnia, or irregular sleep architecture can use SleepSmart to maximize the quality of their wake-up regardless of sleep quality that night.</p>
+      </div>
+    </div>
+
+    <!-- Market size numbers -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:3rem; text-align:center" class="reveal">
+      <div style="padding:2rem; background:white; border-radius:16px; border:1px solid rgba(0,0,0,0.08); box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+        <div style="font-family:'DM Serif Display',serif; font-size:2.8rem; color:var(--blue)">$87B</div>
+        <div style="font-size:0.85rem; color:var(--muted); margin-top:6px; line-height:1.5">Global sleep aids market projected by 2030</div>
+      </div>
+      <div style="padding:2rem; background:white; border-radius:16px; border:1px solid rgba(0,0,0,0.08); box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+        <div style="font-family:'DM Serif Display',serif; font-size:2.8rem; color:var(--blue)">35%</div>
+        <div style="font-size:0.85rem; color:var(--muted); margin-top:6px; line-height:1.5">of US adults get less than recommended sleep (CDC)</div>
+      </div>
+      <div style="padding:2rem; background:white; border-radius:16px; border:1px solid rgba(0,0,0,0.08); box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+        <div style="font-family:'DM Serif Display',serif; font-size:2.8rem; color:var(--blue)">$45</div>
+        <div style="font-size:0.85rem; color:var(--muted); margin-top:6px; line-height:1.5">Estimated retail target price — affordable vs. Fitbit/Oura</div>
+      </div>
+    </div>
+
+    <!-- Competitive landscape -->
+    <div style="margin-top:3rem" class="reveal">
+      <h3 style="color:var(--navy); font-family:'DM Serif Display',serif; font-size:1.4rem; margin-bottom:1rem">Competitive Advantage</h3>
+      <div style="overflow-x:auto">
+        <table style="width:100%; border-collapse:collapse; font-size:0.88rem; background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+          <thead style="background:var(--navy); color:white">
+            <tr>
+              <th style="padding:14px 18px; text-align:left; font-weight:600">Product</th>
+              <th style="padding:14px; text-align:center">Smart Alarm</th>
+              <th style="padding:14px; text-align:center">Wrist-Worn</th>
+              <th style="padding:14px; text-align:center">No Phone Needed</th>
+              <th style="padding:14px; text-align:center">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:rgba(37,99,168,0.06); border-bottom:1px solid rgba(0,0,0,0.06)">
+              <td style="padding:12px 18px; font-weight:700; color:var(--blue)">SleepSmart ★</td>
+              <td style="text-align:center; color:#22c55e">✓</td>
+              <td style="text-align:center; color:#22c55e">✓</td>
+              <td style="text-align:center; color:#22c55e">✓</td>
+              <td style="text-align:center; color:var(--blue); font-weight:600">~$45</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06)">
+              <td style="padding:12px 18px; color:var(--muted)">Oura Ring Gen 3</td>
+              <td style="text-align:center; color:#22c55e">✓</td>
+              <td style="text-align:center; color:var(--muted)">Ring (no vibrate)</td>
+              <td style="text-align:center; color:#ef4444">✗</td>
+              <td style="text-align:center; color:var(--muted)">$299 + sub</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(0,0,0,0.06)">
+              <td style="padding:12px 18px; color:var(--muted)">Sleep Cycle App</td>
+              <td style="text-align:center; color:#22c55e">✓</td>
+              <td style="text-align:center; color:#ef4444">✗ (phone)</td>
+              <td style="text-align:center; color:#ef4444">✗</td>
+              <td style="text-align:center; color:var(--muted)">$30/yr</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 18px; color:var(--muted)">Standard Alarm</td>
+              <td style="text-align:center; color:#ef4444">✗</td>
+              <td style="text-align:center; color:#ef4444">✗</td>
+              <td style="text-align:center; color:#22c55e">✓</td>
+              <td style="text-align:center; color:var(--muted)">$10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USER RESEARCH -->
+<section class="section-dark" id="empathize">
+  <div class="container">
+    <div class="section-label">Empathize</div>
+    <h2 class="section-title">User research</h2>
+    <p class="section-body">We surveyed 18 students and 12 adults about their morning alertness experiences and sleep habits.</p>
+    <div class="cards reveal" style="margin-top:2.5rem">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(232,184,109,0.2); font-size:1.4rem">😴</div>
+        <h3>"I need 30 minutes before I feel human"</h3>
+        <p>The most common complaint. 72% of respondents said they feel groggy for 20+ minutes after their alarm — consistent with sleep inertia research on deep-sleep awakenings.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(74,222,128,0.15); font-size:1.4rem">⏰</div>
+        <h3>"I hate being jolted awake mid-dream"</h3>
+        <p>68% reported waking mid-REM or mid-deep sleep at least 3 times per week. Users described it as "disorienting" and "ruins the whole day."</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(142,197,252,0.15); font-size:1.4rem">💡</div>
+        <h3>"I'd love an alarm that just knows"</h3>
+        <p>When described with SleepSmart's concept, 87% said they would use it. Key desire: it must be wearable, not require a phone in bed, and wake them within a reasonable window.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section style="background:var(--navy-mid); padding:6rem 3rem;" id="about">
+  <div class="container">
+    <div class="section-label">About</div>
+    <h2 class="section-title" style="color:white">The team</h2>
+    <p class="section-body">CIJE-STEAM High School capstone project — Engineering for Healthcare category — CIJE Innovation Day 2026.</p>
+    <div class="team-grid reveal">
+      <div class="team-card">
+        <div class="avatar" style="background: linear-gradient(135deg, #1e3a5f, #2563a8)">A</div>
+        <div style="font-weight:600; color:white; margin-bottom:4px">Team Member A</div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.4)">Hardware &amp; Circuit Design</div>
+      </div>
+      <div class="team-card">
+        <div class="avatar" style="background: linear-gradient(135deg, #1e3a5f, #1d6b52)">B</div>
+        <div style="font-weight:600; color:white; margin-bottom:4px">Team Member B</div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.4)">Firmware &amp; Algorithm</div>
+      </div>
+      <div class="team-card">
+        <div class="avatar" style="background: linear-gradient(135deg, #3f1e5f, #6b2c82)">C</div>
+        <div style="font-weight:600; color:white; margin-bottom:4px">Team Member C</div>
+        <div style="font-size:0.82rem; color:rgba(255,255,255,0.4)">Research &amp; Design</div>
+      </div>
+    </div>
+    <div style="margin-top:3rem; padding:2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px" class="reveal">
+      <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--sky); margin-bottom:1rem">AI Statement</div>
+      <p style="font-size:0.92rem; color:rgba(255,255,255,0.65); line-height:1.75">We used Claude (Anthropic) to help draft and proofread sections of our project portfolio and research summaries. All engineering decisions, circuit design, code architecture, and user research were conducted by the team. The sleep stage detection algorithm was designed and implemented independently based on research papers cited throughout this portfolio.</p>
+    </div>
+    <div style="margin-top:2rem; padding:1.5rem 2rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px" class="reveal">
+      <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--sky); margin-bottom:0.75rem">Resources &amp; Citations</div>
+      <ul style="font-size:0.88rem; color:rgba(255,255,255,0.55); line-height:2.2; padding-left:1.2rem">
+        <li>NIH — National Institute of Neurological Disorders and Stroke: Brain Basics — Understanding Sleep</li>
+        <li>Sleep Foundation — Stages of Sleep &amp; Sleep Inertia</li>
+        <li>Cleveland Clinic — Sleep Basics (sleep stage definitions)</li>
+        <li>PMC — "Waking up is the hardest thing I do all day: Sleep inertia and sleep drunkenness"</li>
+        <li>Oura Research — "Why Do I Wake Up Tired?" (sleep inertia causes)</li>
+        <li>PulseSensor.com — pulse sensor documentation &amp; Arduino library</li>
+        <li>InvenSense — MPU-6050 datasheet &amp; register map</li>
+        <li>Arduino.cc — ESP32 documentation and example sketches</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-family:'DM Serif Display',serif; color:rgba(255,255,255,0.6); font-size:1.1rem; margin-bottom:8px">SleepSmart</p>
+  <p>CIJE Innovation Day 2025–2026 · Engineering for Healthcare Category</p>
+  <p style="margin-top:8px">CIJE-STEAM High School &nbsp;·&nbsp; <a href="mailto:student@school.org">Contact Team</a></p>
+</footer>
+
+<!-- Scroll reveal script -->
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
